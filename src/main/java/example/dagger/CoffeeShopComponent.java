@@ -6,7 +6,8 @@ import javax.inject.Singleton;
 
 @Singleton
 @Component(modules = {HeaterModule.class, PumpModule.class})
-public interface CoffeeShop {
+public interface CoffeeShopComponent {
+    void inject(CoffeeApp coffeeApp);
     CoffeeMaker maker();
     CoffeeLogger logger();
 }

@@ -18,23 +18,34 @@ package example.dagger;
 
 import dagger.Component;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 /**
  * The main app responsible for brewing the coffee and printing the logs.
  */
 public class CoffeeApp {
+    CoffeeShopComponent coffeeShop;
+
+    @Inject CoffeeLogger logger;
+    @Inject CoffeeMaker maker;
+
+    CoffeeApp() {
+        coffeeShop = DaggerCoffeeShopComponent.create();
+        // Or coffeeShop = DaggerCoffeeShopComponent.builder().build();
+        coffeeShop.inject(this);
+    }
+
     @Singleton
     @Component(modules = {HeaterModule.class, PumpModule.class})
     public interface InlineCoffeeShop {
         CoffeeMaker maker();
-
         CoffeeLogger logger();
     }
 
     public static void main(String[] args) {
         System.out.println("=========== Test separate interface CoffeeShop ==========");
-        CoffeeShop coffeeShop = DaggerCoffeeShop.builder().build();
+        CoffeeShopComponent coffeeShop = DaggerCoffeeShopComponent.builder().build();
         coffeeShop.maker().brew();
         coffeeShop.logger().logs().forEach(log -> System.out.println(log));
 
